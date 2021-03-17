@@ -1,0 +1,17 @@
+//Declarative docker image run
+pipeline {
+    agent {
+        docker { image 'pbadhe34/apps:login' 
+         args '-p 8080:8080'
+   
+      }
+    }
+    stages {
+        stage('Test') {
+            steps {
+                sh 'sleep 5'
+                sh "curl http://localhost:8080/Login"
+            }
+        }
+    }
+}

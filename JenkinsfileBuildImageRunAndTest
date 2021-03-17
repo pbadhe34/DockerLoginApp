@@ -1,0 +1,36 @@
+pipeline {
+     agent none    
+     //checkout(scm)
+  stages {
+     stage('Image build') {
+       agent {
+    // Equivalent to "docker build -f Dockerfile-login --build-arg version=1.0.2 .
+
+    dockerfile {
+        filename "Dockerfile-login"
+        dir "."
+        label "master"       
+        additionalBuildArgs  " -t pbadhe34/login:latest"         
+      }
+    }
+      steps {     
+            sh 'sleep 5'
+            echo "Build image done" 
+      } 
+    }
+   stage('Test Image') {
+     agent {
+          docker { 
+               image "pbadhe34/login:latest" 
+               args "-p 8080:8080"
+             }
+         }
+            steps {
+                //sh 'sleep 1'
+                sh "curl http://localhost:8080/"
+            }
+        }
+ }
+
+}
+ 

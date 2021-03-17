@@ -1,0 +1,9 @@
+ //overrides the default Dockerfile by passing the -f flag:
+node {
+    checkout scm
+    def dockerfile = 'Dockerfile-login'
+    def customImage = docker.build("login-app:${env.BUILD_ID}", "-f ${dockerfile} .")
+
+  //publish the image to dockerHub
+  customImage.push() 
+} 

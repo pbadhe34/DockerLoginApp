@@ -1,0 +1,38 @@
+  node {
+     
+  //Run the container
+
+  docker.image('login-app:${env.BUILD_ID}').withRun('-p 8080:8080') { c ->
+        
+        sh 'sleep 5'
+        
+        sh 'curl http://localhost:8080/Login'}
+     
+
+} 
+ 
+***********************************
+//Connect to remote docker daemon
+node {
+    checkout scm
+
+    docker.withServer('tcp://remote:2376', 'swarm-certs') {
+        docker.image('mysql:5').withRun('-p 3306:3306') {
+             
+   
+        }
+    }
+}
+************************
+Using a custom registry
+node {
+    checkout scm
+
+    docker.withRegistry('http://localhost:5000') {
+
+        docker.image('login-app').inside {
+            sh 'make test'
+        }
+    }
+}
+*****************************************

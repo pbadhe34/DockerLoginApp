@@ -1,0 +1,19 @@
+
+//Docker  and Docker pipeline plugin
+
+//Run docker image in container from 
+//jenkins as part of build
+
+pipeline {
+    agent {
+        docker { image 'login-app' }
+    }
+    stages {
+        stage('Test') {
+            steps {
+                sh 'curl http://172.17.0.2:8080/Login/'
+            }
+        }
+    }
+}
+ 
